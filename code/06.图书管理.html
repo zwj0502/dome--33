@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./lib/bootstrap.css">
+    <script src="./lib/jquery.js"></script>
+    <script src="./lib/axios.js"></script>
+</head>
+
+<body style="padding: 15px;">
+
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">图书表格</h3>
+        </div>
+        <div class="panel-body form-inline">
+            <div class="input-group">
+                <div class="input-group-addon">书名</div>
+                <input type="text" class="form-control" id="iptBookname" placeholder="请输入书名">
+            </div>
+            <div class="input-group">
+                <div class="input-group-addon">作者</div>
+                <input type="text" class="form-control" id="iptAuthor" placeholder="请输入作者">
+            </div>
+            <div class="input-group">
+                <div class="input-group-addon">出版社</div>
+                <input type="text" class="form-control" id="iptPublisher" placeholder="请输入出版社">
+            </div>
+            <button id="btnAdd" class="btn btn-primary">添加</button>
+            <button id="btnAdd2" class="btn btn-primary">查询</button>
+        </div>
+    </div>
+
+
+
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>书名</th>
+                <th>作者</th>
+                <th>出版社</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody id="tb">
+
+        </tbody>
+    </table>
+
+
+    <script>
+        // 获取根路径
+        // 获取根路径
+        const baseURL = 'http://ajax-base-api-t.itheima.net'
+        //声明渲染函数
+        const renderTable = () => {
+            // 发起get请求获取图书数据
+            axios({
+                medthod: 'GET',
+                url: baseURL + '/api/getbooks',
+            }).then(res => {
+                console.log(res);
+                const { data } = res
+                const { data: newData } = data
+                console.log(data);
+                // const { msg } = data
+                //声明空数组来接收tr
+                const rederArr = []
+                // //对数据进行遍历，把数据放到tr中
+                newData.forEach(item => {
+                    console.log(item);
+                    const tr = `
+                    <tr>
+                    <td>${item.id}</td>
+                    <td>${item.bookname}</td>
+                    <td>${item.author}</td>
+                    <td>${item.publisher}</td>
+                     <td><a a href="#" class="item-id" data-id="${item.id}">删除</a></td>
+                    </tr>
+                     `
+                    //把装有数据的tr放到用来渲染的数组当中
+                    rederArr.push(tr)
+                    // console.log(rederArr);
+                    //把原来的tbody清空，放入数组
+                });
+                $('#tb').append(rederArr)
+            })
+            //使用对象解构提取data
+
+        }
+        renderTable()
+
+        // 删除事件添加
+        /*     $('#tb').on('click', '.item-id', function () {
+                console.log($(this).attr('data-id'))
+                const bookID = $(this).attr('data-id')
+                $.ajax({
+                    type: 'GET',
+                    url: baseURL + '/api/delbook',
+                    data: { id: bookID },
+                    success: res => {
+                        const { msg } = res
+                        alert(msg)
+                        // renderTable()
+    
+                    }
+                })
+    
+            })
+    
+    
+            // 增加数据
+            $('#btnAdd').on('click', () => {
+                const bookData = {
+                    bookname: $('#iptBookname').val().trim(),
+                    author: $('#iptAuthor').val().trim(),
+                    publisher: $('#iptPublisher').val().trim(),
+                }
+                if ($('#iptBookname').val().trim() &&
+                    $('#iptAuthor').val().trim() &&
+                    $('#iptPublisher').val().trim()) {
+                    $.post(baseURL + '/api/addbook', bookData, res => {
+                        const { status, msg } = res
+                        alert(msg)
+                        if (status !== 201) return
+                        $('#iptBookname').val('')
+                        $('#iptAuthor').val('')
+                        $('#iptPublisher').val('')
+                        renderTable()
+                    })
+    
+                }
+                // console.log(bookData);
+            })
+            // 调用函数
+            renderTable()
+    
+            //查询功能
+    
+            $('#btnAdd2').on('click', () => {
+                const booksData = {
+                    bookname: $('#iptBookname').val().trim(),
+                    author: $('#iptAuthor').val().trim(),
+                    publisher: $('#iptPublisher').val().trim(),
+                }
+                renderTable(booksData)
+                $.ajax({
+                    type: 'GET',
+                    url: baseURL + '/api/getbooks',
+                    // data: null,
+                    success: res => {
+                        console.log(res);
+                        const { data } = res
+                        // console.log(datas); 
+                        data.forEach(item => {
+                            if (booksData.bookname === item.bookname || booksData.author === item.author) {
+                                console.log(item);
+                                $('#tb').empty().append(item)
+                                renderTable(item)
+                            }
+                            if (booksData.publisher === item.publisher) {
+                                // alert('出版社名称搜索维护中 ')
+                            }
+    
+                        })
+                    }
+                })
+    
+            }) */
+    </script>
+
+</body>
+
+</html>
